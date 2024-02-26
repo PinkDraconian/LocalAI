@@ -26,6 +26,9 @@ func ChatEndpoint(cm *config.ConfigLoader, o *options.Option) func(c *fiber.Ctx)
 	id := uuid.New().String()
 	created := int(time.Now().Unix())
 
+	// Sanitize req.Model to remove all occurrences of "../" once in the beginning
+	req.Model = strings.ReplaceAll(req.Model, "../", "")
+
 	process := func(s string, req *schema.OpenAIRequest, config *config.Config, loader *model.ModelLoader, responses chan schema.OpenAIResponse) {
 		initialMessage := schema.OpenAIResponse{
 			ID:      id,
